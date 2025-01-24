@@ -13,7 +13,7 @@ setup(
     py_modules=["src"],
     entry_points={
         'console_scripts': [
-            'expense-tracker=main:main',
+            'expense-tracker=src:cli',
         ],
     },
     tests_require=[

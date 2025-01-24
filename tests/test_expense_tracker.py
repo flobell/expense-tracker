@@ -1,12 +1,12 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from main import load_expenses, add_expense, delete_expense, list_expenses, summary
+from src import load_expenses, add_expense, delete_expense, list_expenses, summary
 
 
 class TestExpenseTracker(unittest.TestCase):
 
     @patch("builtins.open")
-    @patch("main.ensure_expenses_file")
+    @patch("src.ensure_expenses_file")
     @patch("os.path.exists", return_value=True)  # Mocking os.path.exists to return True
     def test_load_expenses_file_exists_with_data(self, mock_exists, mock_ensure_expenses_file, mock_open):
         # Mock the file contents to be returned by json.load
@@ -26,7 +26,7 @@ class TestExpenseTracker(unittest.TestCase):
         self.assertEqual(expenses, [{"id": 1, "description": "Lunch", "amount": 10.0}])
 
     @patch("builtins.open")
-    @patch("main.ensure_expenses_file")
+    @patch("src.ensure_expenses_file")
     @patch("os.path.exists", return_value=True)  # File exists but is empty
     def test_load_expenses_file_exists_but_empty(self, mock_exists, mock_ensure_expenses_file, mock_open):
         # Simulate an empty file
@@ -41,7 +41,7 @@ class TestExpenseTracker(unittest.TestCase):
         self.assertEqual(expenses, [])
 
     @patch("builtins.open")
-    @patch("main.ensure_expenses_file")
+    @patch("src.ensure_expenses_file")
     @patch("os.path.exists", return_value=False)  # Simulate the file does not exist
     def test_load_expenses_file_does_not_exist(self, mock_exists, mock_ensure_expenses_file, mock_open):
         # We expect the file to be created during the execution
@@ -56,8 +56,8 @@ class TestExpenseTracker(unittest.TestCase):
         # Ensure that an empty list is returned
         self.assertEqual(expenses, [])
 
-    @patch("main.save_expenses")
-    @patch("main.load_expenses")
+    @patch("src.save_expenses")
+    @patch("src.load_expenses")
     def test_add_expense(self, mock_load_expenses, mock_save_expenses):
         # Mock data
         expenses = [{"id": 1, "description": "Lunch", "amount": 10.0}]
@@ -78,8 +78,8 @@ class TestExpenseTracker(unittest.TestCase):
         self.assertEqual(expenses[1]['amount'], 5.0)
 
     @patch("builtins.print")
-    @patch("main.save_expenses")
-    @patch("main.load_expenses")
+    @patch("src.save_expenses")
+    @patch("src.load_expenses")
     def test_add_expense_print_message(self, mock_load_expenses, mock_save_expenses, mock_print):
         # Mock data
         expenses = [{"id": 1, "description": "Lunch", "amount": 10.0}]
@@ -96,8 +96,8 @@ class TestExpenseTracker(unittest.TestCase):
         expected_message = f"Expense added successfully (ID: {len(expenses)})"
         mock_print.assert_called_once_with(expected_message)
 
-    @patch("main.save_expenses")
-    @patch("main.load_expenses")
+    @patch("src.save_expenses")
+    @patch("src.load_expenses")
     @patch("builtins.print")
     def test_delete_expense(self, mock_print, mock_load_expenses, mock_save_expenses):
         # Mock data
@@ -119,8 +119,8 @@ class TestExpenseTracker(unittest.TestCase):
         # Verify that print was called with the correct success message
         mock_print.assert_called_once_with('Expense deleted successfully')
 
-    @patch("main.save_expenses")
-    @patch("main.load_expenses")
+    @patch("src.save_expenses")
+    @patch("src.load_expenses")
     @patch("builtins.print")
     def test_delete_expense_not_found(self, mock_print, mock_load_expenses, mock_save_expenses):
         # Mock data
@@ -142,7 +142,7 @@ class TestExpenseTracker(unittest.TestCase):
         mock_print.assert_called_once_with(f'Expense with ID {expense_id} not found')
 
     @patch("builtins.print")
-    @patch("main.load_expenses")
+    @patch("src.load_expenses")
     def test_list_expenses(self, mock_load_expenses, mock_print):
         # Mock data
         expenses = [
@@ -165,7 +165,7 @@ class TestExpenseTracker(unittest.TestCase):
             mock_print.assert_any_call(line)
 
     @patch("builtins.print")
-    @patch("main.load_expenses")
+    @patch("src.load_expenses")
     def test_list_expenses_empty(self, mock_load_expenses, mock_print):
         # Mock data (empty list of expenses)
         mock_load_expenses.return_value = []
@@ -177,7 +177,7 @@ class TestExpenseTracker(unittest.TestCase):
         mock_print.assert_called_once_with('No expenses recorded.')
 
     @patch("builtins.print")
-    @patch("main.load_expenses")
+    @patch("src.load_expenses")
     def test_summary(self, mock_load_expenses, mock_print):
         # Mock data
         expenses = [
@@ -195,7 +195,7 @@ class TestExpenseTracker(unittest.TestCase):
         mock_print.assert_called_once_with('Total expenses: $15.00')
 
     @patch("builtins.print")
-    @patch("main.load_expenses")
+    @patch("src.load_expenses")
     def test_summary_with_month(self, mock_load_expenses, mock_print):
         # Mock data
         expenses = [
